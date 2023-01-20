@@ -1,0 +1,12 @@
+{
+  "resourceName": "content",
+  "policyUUID": "6130e7f0",
+  "bucketName": "aws-challenge-files-7613557315",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "READ"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}
