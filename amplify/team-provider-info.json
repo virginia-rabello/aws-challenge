@@ -14,6 +14,12 @@
     "categories": {
       "auth": {
         "awschallenge1b873b25": {}
+      },
+      "api": {
+        "awschallenge": {}
+      },
+      "storage": {
+        "content": {}
       }
     }
   }
