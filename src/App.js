@@ -12,6 +12,7 @@ import {
   View,
   withAuthenticator,
 } from '@aws-amplify/ui-react';
+import { MenuComponent } from './components/menu/MenuComponent';
 import { listNotes } from "./graphql/queries";
 import {
   createNote as createNoteMutation,
@@ -20,7 +21,7 @@ import {
 
 const App = ({ signOut }) => {
   const [notes, setNotes] = useState([]);
-
+  
   useEffect(() => {
     fetchNotes();
   }, []);
@@ -69,6 +70,7 @@ const App = ({ signOut }) => {
   }
   return (
     <View className="App">
+      <MenuComponent signOut={signOut}></MenuComponent>
       <Heading level={1}>My Notes App</Heading>
       <View as="form" margin="3rem 0" onSubmit={createNote}>
         <Flex direction="row" justifyContent="center">
@@ -125,7 +127,7 @@ const App = ({ signOut }) => {
   </Flex>
 ))}
       </View>
-      <Button onClick={signOut}>Sign Out</Button>
+      
     </View>
   );
 };
