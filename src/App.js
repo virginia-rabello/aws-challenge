@@ -8,19 +8,19 @@ import {
   Heading,
   Image,
   Text,
-  TextField,
   View,
   withAuthenticator,
 } from '@aws-amplify/ui-react';
 import { MenuComponent } from './components/menu/MenuComponent';
 import { listNotes } from "./graphql/queries";
 import {
-  createNote as createNoteMutation,
   deleteNote as deleteNoteMutation,
 } from "./graphql/mutations";
+import { CreateSlideModal } from "./components/createSlideModal/CreateSlideModal";
 
 const App = ({ signOut }) => {
   const [notes, setNotes] = useState([]);
+  const [createSlideModalOpen, toggleCreateSlideModal] = useState(false)
   
   useEffect(() => {
     fetchNotes();
@@ -41,23 +41,6 @@ const App = ({ signOut }) => {
     setNotes(notesFromAPI);
   }
 
-  async function createNote(event) {
-    event.preventDefault();
-    const form = new FormData(event.target);
-    const image = form.get("image");
-    const data = {
-      name: form.get("name"),
-      description: form.get("description"),
-      image: image.name,
-    };
-    if (!!data.image) await Storage.put(data.name, image);
-    await API.graphql({
-      query: createNoteMutation,
-      variables: { input: data },
-    });
-    fetchNotes();
-    event.target.reset();
-  }
 
   async function deleteNote({ id, name }) {
     const newNotes = notes.filter((note) => note.id !== id);
@@ -70,37 +53,9 @@ const App = ({ signOut }) => {
   }
   return (
     <View className="App">
-      <MenuComponent signOut={signOut}></MenuComponent>
+      <MenuComponent createSlideModalOpen={createSlideModalOpen} toggleCreateSlideModal={toggleCreateSlideModal} signOut={signOut}></MenuComponent>
+      {createSlideModalOpen && <CreateSlideModal createSlideModalOpen={createSlideModalOpen} toggleCreateSlideModal={toggleCreateSlideModal}/>}
       <Heading level={1}>My Notes App</Heading>
-      <View as="form" margin="3rem 0" onSubmit={createNote}>
-        <Flex direction="row" justifyContent="center">
-          <TextField
-            name="name"
-            placeholder="Note Name"
-            label="Note Name"
-            labelHidden
-            variation="quiet"
-            required
-          />
-          <TextField
-            name="description"
-            placeholder="Note Description"
-            label="Note Description"
-            labelHidden
-            variation="quiet"
-            required
-          />
-          <View
-            name="image"
-            as="input"
-            type="file"
-            style={{ alignSelf: "end" }}
-          />
-          <Button type="submit" variation="primary">
-            Create Note
-          </Button>
-        </Flex>
-      </View>
       <Heading level={2}>Current Notes</Heading>
       <View margin="3rem 0">
       {notes.map((note) => (
