@@ -12,8 +12,21 @@ import {
   import {
     createNote as createNoteMutation,
   } from "../../graphql/mutations";
-  export const CreateSlideModal = ({createSlideModalOpen, toggleCreateSlideModal}) => {
-
+  export const CreateSlideModal = ({createSlideModalOpen, toggleCreateSlideModal, listNotes, setNotes}) => {
+    async function fetchNotes() {
+        const apiData = await API.graphql({ query: listNotes });
+        const notesFromAPI = apiData.data.listNotes.items;
+        await Promise.all(
+          notesFromAPI.map(async (note) => {
+            if (note.image) {
+              const url = await Storage.get(note.name);
+              note.image = url;
+            }
+            return note;
+          })
+        );
+        setNotes(notesFromAPI);
+      }
     async function createNote(event) {
         event.preventDefault();
         const form = new FormData(event.target);
@@ -28,6 +41,7 @@ import {
           query: createNoteMutation,
           variables: { input: data },
         });
+        fetchNotes();
         event.target.reset();
       }
 

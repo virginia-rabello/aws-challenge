@@ -5,8 +5,9 @@ import { API, Storage } from 'aws-amplify';
 import {
   Button,
   Flex,
-  Heading,
+  Tabs,
   Image,
+  TabItem,
   Text,
   View,
   withAuthenticator,
@@ -53,10 +54,37 @@ const App = ({ signOut }) => {
   }
   return (
     <View className="App">
+      {createSlideModalOpen && <CreateSlideModal createSlideModalOpen={createSlideModalOpen} toggleCreateSlideModal={toggleCreateSlideModal} setNotes={setNotes} listNotes={notes}/>}
+      <Tabs defaultIndex={1}>
       <MenuComponent createSlideModalOpen={createSlideModalOpen} toggleCreateSlideModal={toggleCreateSlideModal} signOut={signOut}></MenuComponent>
-      {createSlideModalOpen && <CreateSlideModal createSlideModalOpen={createSlideModalOpen} toggleCreateSlideModal={toggleCreateSlideModal}/>}
-      <Heading level={1}>My Notes App</Heading>
-      <Heading level={2}>Current Notes</Heading>
+      <TabItem title="Present">
+      <View>
+      {notes.map((note) => (
+
+  <Flex
+    key={note.id || note.name}
+    direction="column"
+    justifyContent="center"
+    alignItems="center"
+  >
+    {note.image && (
+      <Image
+      boxShadow="3px 3px 3px 3px var(--amplify-colors-neutral-60)"
+        borderRadius="10px"
+        border="1px black"
+        width="78%"
+        marginTop="10px"
+        marginBottom="10px"
+        src={note.image}
+        alt={`visual aid for ${notes.name}`}
+      />
+    )}
+  </Flex>
+))}
+      </View>
+
+      </TabItem>
+      <TabItem title="Organize">
       <View margin="3rem 0">
       {notes.map((note) => (
   <Flex
@@ -73,7 +101,7 @@ const App = ({ signOut }) => {
       <Image
         src={note.image}
         alt={`visual aid for ${notes.name}`}
-        style={{ width: 400 }}
+        style={{ width: 200 }}
       />
     )}
     <Button variation="link" onClick={() => deleteNote(note)}>
@@ -82,6 +110,9 @@ const App = ({ signOut }) => {
   </Flex>
 ))}
       </View>
+      </TabItem>
+      </Tabs>
+      
       
     </View>
   );
