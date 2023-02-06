@@ -5,11 +5,14 @@ import { API, Storage } from 'aws-amplify';
 import {
   Button,
   Flex,
-  Heading,
+  Tabs,
   Image,
+  TabItem,
   Text,
   View,
   withAuthenticator,
+  Pagination,
+  usePagination
 } from '@aws-amplify/ui-react';
 import { MenuComponent } from './components/menu/MenuComponent';
 import { listNotes } from "./graphql/queries";
@@ -20,11 +23,32 @@ import { CreateSlideModal } from "./components/createSlideModal/CreateSlideModal
 
 const App = ({ signOut }) => {
   const [notes, setNotes] = useState([]);
+  const [currentPageIndex, setCurrentPageIndex] = React.useState(1);
+  const totalPages = notes.length;
   const [createSlideModalOpen, toggleCreateSlideModal] = useState(false)
   
   useEffect(() => {
     fetchNotes();
   }, []);
+
+  const handleNextPage = () => {
+    setCurrentPageIndex(currentPageIndex + 1);
+  };
+  const handlePreviousPage = () => {
+    console.log('handlePreviousPage');
+    setCurrentPageIndex(currentPageIndex - 1);
+  };
+  const handleOnChange = (newPageIndex) => {
+    setCurrentPageIndex(newPageIndex);
+  };
+  
+const verifyPage = (currentPageIndex, index) => {
+  if(currentPageIndex === index+1) {
+    return true
+  } else {
+    return false
+  }
+}
 
   async function fetchNotes() {
     const apiData = await API.graphql({ query: listNotes });
@@ -73,15 +97,18 @@ const App = ({ signOut }) => {
       <Image
         src={note.image}
         alt={`visual aid for ${notes.name}`}
-        style={{ width: 400 }}
+        style={{ width: 200 }}
       />
     )}
     <Button variation="link" onClick={() => deleteNote(note)}>
-      Delete note
+      Delete Slide
     </Button>
   </Flex>
 ))}
       </View>
+      </TabItem>
+      </Tabs>
+
       
     </View>
   );

@@ -13,7 +13,6 @@ import {
     createNote as createNoteMutation,
   } from "../../graphql/mutations";
   export const CreateSlideModal = ({createSlideModalOpen, toggleCreateSlideModal}) => {
-
     async function createNote(event) {
         event.preventDefault();
         const form = new FormData(event.target);
@@ -28,6 +27,7 @@ import {
           query: createNoteMutation,
           variables: { input: data },
         });
+        fetchNotes();
         event.target.reset();
       }
 
