@@ -11,6 +11,8 @@ import {
   Text,
   View,
   withAuthenticator,
+  Pagination,
+  usePagination
 } from '@aws-amplify/ui-react';
 import { MenuComponent } from './components/menu/MenuComponent';
 import { listNotes } from "./graphql/queries";
@@ -21,11 +23,32 @@ import { CreateSlideModal } from "./components/createSlideModal/CreateSlideModal
 
 const App = ({ signOut }) => {
   const [notes, setNotes] = useState([]);
+  const [currentPageIndex, setCurrentPageIndex] = React.useState(1);
+  const totalPages = notes.length;
   const [createSlideModalOpen, toggleCreateSlideModal] = useState(false)
   
   useEffect(() => {
     fetchNotes();
   }, []);
+
+  const handleNextPage = () => {
+    setCurrentPageIndex(currentPageIndex + 1);
+  };
+  const handlePreviousPage = () => {
+    console.log('handlePreviousPage');
+    setCurrentPageIndex(currentPageIndex - 1);
+  };
+  const handleOnChange = (newPageIndex) => {
+    setCurrentPageIndex(newPageIndex);
+  };
+  
+const verifyPage = (currentPageIndex, index) => {
+  if(currentPageIndex === index+1) {
+    return true
+  } else {
+    return false
+  }
+}
 
   async function fetchNotes() {
     const apiData = await API.graphql({ query: listNotes });
@@ -59,7 +82,7 @@ const App = ({ signOut }) => {
       <MenuComponent createSlideModalOpen={createSlideModalOpen} toggleCreateSlideModal={toggleCreateSlideModal} signOut={signOut}></MenuComponent>
       <TabItem title="Present">
       <View>
-      {notes.map((note) => (
+      {notes.map((note, index) => (
 
   <Flex
     key={note.id || note.name}
@@ -67,7 +90,7 @@ const App = ({ signOut }) => {
     justifyContent="center"
     alignItems="center"
   >
-    {note.image && (
+    {note.image && verifyPage(currentPageIndex, index) && (
       <Image
       boxShadow="3px 3px 3px 3px var(--amplify-colors-neutral-60)"
         borderRadius="10px"
@@ -81,6 +104,13 @@ const App = ({ signOut }) => {
     )}
   </Flex>
 ))}
+        <Pagination
+        currentPage={currentPageIndex}
+        totalPages={totalPages}
+        onNext={handleNextPage}
+        onPrevious={handlePreviousPage}
+        onChange={handleOnChange}
+        />
       </View>
 
       </TabItem>
@@ -105,7 +135,7 @@ const App = ({ signOut }) => {
       />
     )}
     <Button variation="link" onClick={() => deleteNote(note)}>
-      Delete note
+      Delete Slide
     </Button>
   </Flex>
 ))}
