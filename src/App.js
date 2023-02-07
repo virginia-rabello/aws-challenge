@@ -141,7 +141,7 @@ const verifyPage = (currentPageIndex, index) => {
       </View>
       </TabItem>
       </Tabs>
-      
+
       
     </View>
   );
