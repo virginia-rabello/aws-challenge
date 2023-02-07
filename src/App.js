@@ -11,8 +11,7 @@ import {
   Text,
   View,
   withAuthenticator,
-  Pagination,
-  usePagination
+  Pagination
 } from '@aws-amplify/ui-react';
 import { MenuComponent } from './components/menu/MenuComponent';
 import { listNotes } from "./graphql/queries";
