@@ -27,7 +27,6 @@ import {
           query: createNoteMutation,
           variables: { input: data },
         });
-        fetchNotes();
         event.target.reset();
       }
 
