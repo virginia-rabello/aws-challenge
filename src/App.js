@@ -11,8 +11,7 @@ import {
   Text,
   View,
   withAuthenticator,
-  Pagination,
-  usePagination
+  Pagination
 } from '@aws-amplify/ui-react';
 import { MenuComponent } from './components/menu/MenuComponent';
 import { listNotes } from "./graphql/queries";
@@ -77,10 +76,44 @@ const verifyPage = (currentPageIndex, index) => {
   }
   return (
     <View className="App">
+      {createSlideModalOpen && <CreateSlideModal createSlideModalOpen={createSlideModalOpen} toggleCreateSlideModal={toggleCreateSlideModal} setNotes={setNotes} listNotes={notes}/>}
+      <Tabs defaultIndex={1}>
       <MenuComponent createSlideModalOpen={createSlideModalOpen} toggleCreateSlideModal={toggleCreateSlideModal} signOut={signOut}></MenuComponent>
-      {createSlideModalOpen && <CreateSlideModal createSlideModalOpen={createSlideModalOpen} toggleCreateSlideModal={toggleCreateSlideModal}/>}
-      <Heading level={1}>My Notes App</Heading>
-      <Heading level={2}>Current Notes</Heading>
+      <TabItem title="Present">
+      <View>
+      {notes.map((note, index) => (
+
+  <Flex
+    key={note.id || note.name}
+    direction="column"
+    justifyContent="center"
+    alignItems="center"
+  >
+    {note.image && verifyPage(currentPageIndex, index) && (
+      <Image
+      boxShadow="3px 3px 3px 3px var(--amplify-colors-neutral-60)"
+        borderRadius="10px"
+        border="1px black"
+        width="78%"
+        marginTop="10px"
+        marginBottom="10px"
+        src={note.image}
+        alt={`visual aid for ${notes.name}`}
+      />
+    )}
+  </Flex>
+))}
+        <Pagination
+        currentPage={currentPageIndex}
+        totalPages={totalPages}
+        onNext={handleNextPage}
+        onPrevious={handlePreviousPage}
+        onChange={handleOnChange}
+        />
+      </View>
+
+      </TabItem>
+      <TabItem title="Organize">
       <View margin="3rem 0">
       {notes.map((note) => (
   <Flex
