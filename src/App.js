@@ -61,10 +61,17 @@ const verifyPage = (currentPageIndex, index) => {
         return note;
       })
     );
-    setNotes(notesFromAPI);
+    if(notesFromAPI.length){
+    setNotes(notesFromAPI.sort(sortNotes));
+      console.log(notesFromAPI.sort(sortNotes))
+    }
   }
 
-
+function sortNotes(a, b) {
+ let slideA = a.name.split(" ").pop();
+ let slideB = b.name.split(" ").pop();
+    return slideA - slideB
+}
   async function deleteNote({ id, name }) {
     const newNotes = notes.filter((note) => note.id !== id);
     setNotes(newNotes);
@@ -74,6 +81,7 @@ const verifyPage = (currentPageIndex, index) => {
       variables: { input: { id } },
     });
   }
+
   return (
     <View className="App">
       {createSlideModalOpen && <CreateSlideModal createSlideModalOpen={createSlideModalOpen} toggleCreateSlideModal={toggleCreateSlideModal} setNotes={setNotes} listNotes={notes}/>}
