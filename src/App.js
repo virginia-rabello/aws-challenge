@@ -102,7 +102,7 @@ function sortNotes(a, b) {
       boxShadow="3px 3px 3px 3px var(--amplify-colors-neutral-60)"
         borderRadius="10px"
         border="1px black"
-        width="100%"
+        width="78%"
         marginTop="10px"
         marginBottom="10px"
         src={note.image}
